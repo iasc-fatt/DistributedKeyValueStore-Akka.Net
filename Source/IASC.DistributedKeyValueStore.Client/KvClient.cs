@@ -37,9 +37,10 @@ namespace IASC.DistributedKeyValueStore.Client
             return await Storage.Ask<string>(new ConsistentHashableEnvelope(msg, msg.Key));
         }
 
-        public async Task<IEnumerable<string>> Search(Func<string, bool> predicate)
+        public async Task<IEnumerable<string>> Search(string valueToCompare, string comparison)
         {
-            throw new NotImplementedException();
+            var msg = new SearchMessage(valueToCompare, comparison);
+            return await Storage.Ask<IEnumerable<string>>(new Broadcast(msg));
         }
 
         public void Dispose()

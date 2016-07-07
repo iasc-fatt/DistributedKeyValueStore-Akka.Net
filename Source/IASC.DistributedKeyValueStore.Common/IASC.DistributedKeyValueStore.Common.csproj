@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InsertMessage.cs" />
+    <Compile Include="SearchMessage.cs" />
     <Compile Include="LookupMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

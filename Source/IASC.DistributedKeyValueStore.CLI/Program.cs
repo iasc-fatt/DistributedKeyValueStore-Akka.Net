@@ -44,6 +44,15 @@ namespace IASC.DistributedKeyValueStore.CLI
 
                         Console.WriteLine("found: {0}", value);
                     }
+                    else if (action == "search")
+                    {
+                        var comparison = commandSegments[1];
+                        var valueToCompare = commandSegments[2];
+
+                        var values = client.Search(valueToCompare, comparison).Result;
+
+                        Console.WriteLine("found: {0}", string.Join(",", values));
+                    }
                     else if (action == "exit")
                     {
                         break;
