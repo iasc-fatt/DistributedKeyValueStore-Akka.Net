@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IASC.DistributedKeyValueStore.Client", "IASC.DistributedKeyValueStore.Client\IASC.DistributedKeyValueStore.Client.csproj", "{F6280666-ED9B-4E11-8C4C-4044A637A298}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IASC.DistributedKeyValueStore.Server", "IASC.DistributedKeyValueStore.Server\IASC.DistributedKeyValueStore.Server.csproj", "{602682AD-50AA-418C-BE6A-32FA0604ADC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IASC.DistributedKeyValueStore.Common", "IASC.DistributedKeyValueStore.Common\IASC.DistributedKeyValueStore.Common.csproj", "{71D6023E-19F0-46AA-AEFE-673D0C3639FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IASC.DistributedKeyValueStore.CLI", "IASC.DistributedKeyValueStore.CLI\IASC.DistributedKeyValueStore.CLI.csproj", "{97E550BB-3B5A-455A-A071-B030B58257EC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F6280666-ED9B-4E11-8C4C-4044A637A298}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6280666-ED9B-4E11-8C4C-4044A637A298}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6280666-ED9B-4E11-8C4C-4044A637A298}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6280666-ED9B-4E11-8C4C-4044A637A298}.Release|Any CPU.Build.0 = Release|Any CPU
+		{602682AD-50AA-418C-BE6A-32FA0604ADC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{602682AD-50AA-418C-BE6A-32FA0604ADC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{602682AD-50AA-418C-BE6A-32FA0604ADC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{602682AD-50AA-418C-BE6A-32FA0604ADC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71D6023E-19F0-46AA-AEFE-673D0C3639FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71D6023E-19F0-46AA-AEFE-673D0C3639FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71D6023E-19F0-46AA-AEFE-673D0C3639FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71D6023E-19F0-46AA-AEFE-673D0C3639FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97E550BB-3B5A-455A-A071-B030B58257EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97E550BB-3B5A-455A-A071-B030B58257EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97E550BB-3B5A-455A-A071-B030B58257EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97E550BB-3B5A-455A-A071-B030B58257EC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
