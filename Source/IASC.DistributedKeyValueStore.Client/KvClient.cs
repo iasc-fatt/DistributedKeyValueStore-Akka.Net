@@ -10,36 +10,36 @@ namespace IASC.DistributedKeyValueStore.Client
     public class KvClient : IDisposable
     {
         private readonly ActorSystem KvActorSystem;
-        private readonly ICanTell Storage;
+        private readonly ICanTell Server;
 
         public KvClient(string serverAddress)
         {
             KvActorSystem = ActorSystem.Create("KvActorSystem");
-            Storage = KvActorSystem.ActorSelection(serverAddress + "/user/storage");
+            Server = KvActorSystem.ActorSelection(serverAddress + "/user/server");
         }
 
         public async Task Insert(string key, string value)
         {
             var msg = new InsertValue(key, value);
-            await Storage.Ask(new ConsistentHashableEnvelope(msg, msg.Key));
+            await Server.Ask(msg);
         }
 
         public async Task Remove(string key)
         {
             var msg = new RemoveValue(key);
-            await Storage.Ask(new ConsistentHashableEnvelope(msg, msg.Key));
+            await Server.Ask(msg);
         }
 
         public async Task<Maybe<LookupResult>> Lookup(string key)
         {
             var msg = new LookupValue(key);
-            return await Storage.Ask<Maybe<LookupResult>>(new ConsistentHashableEnvelope(msg, msg.Key));
+            return await Server.Ask<Maybe<LookupResult>>(msg);
         }
 
         public async Task<IEnumerable<string>> Search(string valueToCompare, string comparison)
         {
             var msg = new SearchValues(valueToCompare, comparison);
-            return await Storage.Ask<IEnumerable<string>>(new Broadcast(msg));
+            return await Server.Ask<IEnumerable<string>>(msg);
         }
 
         public void Dispose()

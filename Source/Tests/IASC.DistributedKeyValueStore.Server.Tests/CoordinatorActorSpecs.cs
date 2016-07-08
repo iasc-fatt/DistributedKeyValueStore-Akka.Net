@@ -9,15 +9,32 @@ namespace IASC.DistributedKeyValueStore.Server.Tests
 {
     public class CoordinatorActorSpecs : TestKit
     {
+        private readonly IActorRef sut;
+
+        public CoordinatorActorSpecs()
+            : base(@"
+              akka {
+                actor {
+                  deployment {
+                    /server/storage {
+                      router = consistent-hashing-pool
+                      nr-of-instances = 5
+                      virtual-nodes-factor = 10
+                    }
+                  }
+                }
+              }")
+        {
+            sut = Sys.ActorOf(Props.Create(() => new CoordinatorActor()), "server");
+        }
+
         [Theory, AutoData]
         public void InsertAndLookupValue_ShouldFindValue(string key, string value)
         {
-            var coordinator = Sys.ActorOf(Props.Create(() => new StorageActor()));
-
-            coordinator.Tell(new InsertValue(key, value));
+            sut.Tell(new InsertValue(key, value));
             ExpectMsg<OpSucced>();
 
-            coordinator.Tell(new LookupValue(key));
+            sut.Tell(new LookupValue(key));
 
             ExpectMsg<Maybe<LookupResult>>()
                 .ShouldBeEquivalentTo(new LookupResult(key, value).Just());
@@ -26,9 +43,7 @@ namespace IASC.DistributedKeyValueStore.Server.Tests
         [Theory, AutoData]
         public void RemoveUnexistingKey_ShouldSucced(string key)
         {
-            var coordinator = Sys.ActorOf(Props.Create(() => new StorageActor()));
-
-            coordinator.Tell(new RemoveValue(key));
+            sut.Tell(new RemoveValue(key));
 
             ExpectMsg<OpSucced>();
         }
@@ -36,9 +51,7 @@ namespace IASC.DistributedKeyValueStore.Server.Tests
         [Theory, AutoData]
         public void LookupUnexistingKey_ShouldReplyEmpty(string key)
         {
-            var coordinator = Sys.ActorOf(Props.Create(() => new StorageActor()));
-
-            coordinator.Tell(new LookupValue(key));
+            sut.Tell(new LookupValue(key));
 
             ExpectMsg<Maybe<LookupResult>>()
                 .Should().BeEmpty();
@@ -47,14 +60,12 @@ namespace IASC.DistributedKeyValueStore.Server.Tests
         [Theory, AutoData]
         public void InsertRemoveAndLookupValue_ShouldReplyEmpty(string key, string value)
         {
-            var coordinator = Sys.ActorOf(Props.Create(() => new StorageActor()));
-
-            coordinator.Tell(new InsertValue(key, value));
+            sut.Tell(new InsertValue(key, value));
             ExpectMsg<OpSucced>();
-            coordinator.Tell(new RemoveValue(key));
+            sut.Tell(new RemoveValue(key));
             ExpectMsg<OpSucced>();
 
-            coordinator.Tell(new LookupValue(key));
+            sut.Tell(new LookupValue(key));
 
             ExpectMsg<Maybe<LookupResult>>()
                 .Should().BeEmpty();
