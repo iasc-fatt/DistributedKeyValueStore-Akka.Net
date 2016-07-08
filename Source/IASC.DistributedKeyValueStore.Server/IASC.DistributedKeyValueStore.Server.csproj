@@ -75,9 +75,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JoinerActor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CoordinatorActor.cs" />
+    <Compile Include="SearchValuesActor.cs" />
     <Compile Include="StorageActor.cs" />
   </ItemGroup>
   <ItemGroup>

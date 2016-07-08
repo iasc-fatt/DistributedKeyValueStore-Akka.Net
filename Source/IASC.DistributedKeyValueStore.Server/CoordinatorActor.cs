@@ -19,7 +19,7 @@ namespace IASC.DistributedKeyValueStore.Server
             Receive<InsertValue>(msg =>
             {
                 _log.Info("Inserting key '{0}'", msg.Key);
-                
+
                 Storage.Forward(new ConsistentHashableEnvelope(msg, msg.Key));
             });
 
@@ -37,12 +37,12 @@ namespace IASC.DistributedKeyValueStore.Server
                 Storage.Forward(new ConsistentHashableEnvelope(msg, msg.Key));
             });
 
-            // TO DO: broadcasts the message and joins the responses
             Receive<SearchValues>(msg =>
             {
                 _log.Info("Searching {0} '{1}'", msg.Comparison, msg.ValueToCompare);
 
-                Storage.Forward(new Broadcast(msg));
+                var joiner = Context.ActorOf(Props.Create(() => new SearchValuesActor(Storage, Sender)));
+                joiner.Tell(msg);
             });
         }
     }
