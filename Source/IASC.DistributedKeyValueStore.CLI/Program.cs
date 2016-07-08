@@ -33,6 +33,14 @@ namespace IASC.DistributedKeyValueStore.CLI
 
                         Console.WriteLine("inserted");
                     }
+                    else if (action == "remove")
+                    {
+                        var key = commandSegments[1];
+
+                        client.Remove(key).Wait();
+
+                        Console.WriteLine("removed");
+                    }
                     else if (action == "lookup")
                     {
                         var key = commandSegments[1];

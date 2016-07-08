@@ -15,7 +15,6 @@ namespace IASC.DistributedKeyValueStore.Server.Tests
             var coordinator = Sys.ActorOf(Props.Create(() => new StorageActor()));
 
             coordinator.Tell(new InsertValue(key, value));
-
             ExpectMsg<OpSucced>();
 
             coordinator.Tell(new LookupValue(key));
@@ -25,9 +24,35 @@ namespace IASC.DistributedKeyValueStore.Server.Tests
         }
 
         [Theory, AutoData]
+        public void RemoveUnexistingKey_ShouldSucced(string key)
+        {
+            var coordinator = Sys.ActorOf(Props.Create(() => new StorageActor()));
+
+            coordinator.Tell(new RemoveValue(key));
+
+            ExpectMsg<OpSucced>();
+        }
+
+        [Theory, AutoData]
         public void LookupUnexistingKey_ShouldReplyEmpty(string key)
         {
             var coordinator = Sys.ActorOf(Props.Create(() => new StorageActor()));
+
+            coordinator.Tell(new LookupValue(key));
+
+            ExpectMsg<Maybe<LookupResult>>()
+                .Should().BeEmpty();
+        }
+
+        [Theory, AutoData]
+        public void InsertRemoveAndLookupValue_ShouldReplyEmpty(string key, string value)
+        {
+            var coordinator = Sys.ActorOf(Props.Create(() => new StorageActor()));
+
+            coordinator.Tell(new InsertValue(key, value));
+            ExpectMsg<OpSucced>();
+            coordinator.Tell(new RemoveValue(key));
+            ExpectMsg<OpSucced>();
 
             coordinator.Tell(new LookupValue(key));
 

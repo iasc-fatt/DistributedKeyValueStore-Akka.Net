@@ -26,7 +26,8 @@ namespace IASC.DistributedKeyValueStore.Client
 
         public async Task Remove(string key)
         {
-            throw new NotImplementedException();
+            var msg = new RemoveValue(key);
+            await Storage.Ask(new ConsistentHashableEnvelope(msg, msg.Key));
         }
 
         public async Task<Maybe<LookupResult>> Lookup(string key)

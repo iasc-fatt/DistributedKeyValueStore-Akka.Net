@@ -24,6 +24,14 @@ namespace IASC.DistributedKeyValueStore.Server
                 Sender.Tell(new OpSucced());
             });
 
+            Receive<RemoveValue>(message =>
+            {
+                _log.Info("Removing key '{1}'", Self, message.Key);
+
+                Storage.Remove(message.Key);
+                Sender.Tell(new OpSucced());
+            });
+
             Receive<LookupValue>(message =>
             {
                 _log.Info("Looking up key '{1}'", Self, message.Key);
