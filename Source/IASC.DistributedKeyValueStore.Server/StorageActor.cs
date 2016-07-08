@@ -18,7 +18,7 @@ namespace IASC.DistributedKeyValueStore.Server
 
             Receive<InsertValue>(msg =>
             {
-                _log.Info("Inserting key '{1}'", Self, msg.Key);
+                _log.Info("Inserting key '{1}'", msg.Key);
 
                 Storage[msg.Key] = msg.Value;
                 Sender.Tell(new OpSucced());
@@ -26,7 +26,7 @@ namespace IASC.DistributedKeyValueStore.Server
 
             Receive<RemoveValue>(msg =>
             {
-                _log.Info("Removing key '{1}'", Self, msg.Key);
+                _log.Info("Removing key '{1}'", msg.Key);
 
                 Storage.Remove(msg.Key);
                 Sender.Tell(new OpSucced());
@@ -34,7 +34,7 @@ namespace IASC.DistributedKeyValueStore.Server
 
             Receive<LookupValue>(msg =>
             {
-                _log.Info("Looking up key '{1}'", Self, msg.Key);
+                _log.Info("Looking up key '{1}'", msg.Key);
 
                 string value;
                 if (Storage.TryGetValue(msg.Key, out value))
@@ -46,7 +46,7 @@ namespace IASC.DistributedKeyValueStore.Server
             // TO DO: we need a parent actor that broadcasts the message and joins the responses
             Receive<SearchValues>(msg =>
             {
-                _log.Info("Searching {1} '{2}'", Self, msg.Comparison, msg.ValueToCompare);
+                _log.Info("Searching {1} '{2}'", msg.Comparison, msg.ValueToCompare);
 
                 const int invalidComparision = -2;
 
