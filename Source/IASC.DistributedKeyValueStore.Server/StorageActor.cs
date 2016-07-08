@@ -1,6 +1,6 @@
 ﻿using Akka.Actor;
+using Akka.Event;
 using IASC.DistributedKeyValueStore.Common;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,6 +8,8 @@ namespace IASC.DistributedKeyValueStore.Server
 {
     public class StorageActor : ReceiveActor
     {
+        private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
+
         private readonly Dictionary<string, string> Storage;
 
         public StorageActor()
@@ -16,7 +18,7 @@ namespace IASC.DistributedKeyValueStore.Server
 
             Receive<InsertValue>(message =>
             {
-                Console.WriteLine("StorageActor {0} - Inserting key '{1}'", Self, message.Key);
+                _log.Info("Inserting key '{1}'", Self, message.Key);
 
                 Storage[message.Key] = message.Value;
                 Sender.Tell(new OpSucced());
@@ -24,7 +26,7 @@ namespace IASC.DistributedKeyValueStore.Server
 
             Receive<LookupValue>(message =>
             {
-                Console.WriteLine("StorageActor {0} - Looking up key '{1}'", Self, message.Key);
+                _log.Info("Looking up key '{1}'", Self, message.Key);
 
                 string value;
                 if (Storage.TryGetValue(message.Key, out value))
@@ -36,7 +38,7 @@ namespace IASC.DistributedKeyValueStore.Server
             // TO DO: we need a parent actor that broadcasts the message and joins the responses
             Receive<SearchValues>(message =>
             {
-                Console.WriteLine("StorageActor {0} - Searching {1} '{2}'", Self, message.Comparison, message.ValueToCompare);
+                _log.Info("Searching {1} '{2}'", Self, message.Comparison, message.ValueToCompare);
 
                 const int invalidComparision = -2;
 
