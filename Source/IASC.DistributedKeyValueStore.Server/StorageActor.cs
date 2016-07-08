@@ -17,6 +17,7 @@ namespace IASC.DistributedKeyValueStore.Server
             Receive<InsertValue>(message =>
             {
                 Console.WriteLine("StorageActor {0} - Inserting key '{1}'", Self, message.Key);
+
                 Storage[message.Key] = message.Value;
                 Sender.Tell(new OpSucced());
             });
@@ -24,8 +25,12 @@ namespace IASC.DistributedKeyValueStore.Server
             Receive<LookupValue>(message =>
             {
                 Console.WriteLine("StorageActor {0} - Looking up key '{1}'", Self, message.Key);
-                // TODO: handle key not found
-                Sender.Tell(Storage[message.Key]);
+
+                string value;
+                if (Storage.TryGetValue(message.Key, out value))
+                    Sender.Tell(new LookupResult(message.Key, value).Just());
+                else
+                    Sender.Tell(Maybe.Nothing<LookupResult>());
             });
 
             // TO DO: we need a parent actor that broadcasts the message and joins the responses

@@ -1,6 +1,7 @@
 ﻿using IASC.DistributedKeyValueStore.Client;
 using System;
 using System.Configuration;
+using System.Linq;
 using System.Threading;
 
 namespace IASC.DistributedKeyValueStore.CLI
@@ -38,7 +39,10 @@ namespace IASC.DistributedKeyValueStore.CLI
 
                         var value = client.Lookup(key).Result;
 
-                        Console.WriteLine("found: {0}", value);
+                        if(value.Any())
+                            Console.WriteLine("value found: {0}", value.Single().Value);
+                        else
+                            Console.WriteLine("key not found");
                     }
                     else if (action == "search")
                     {

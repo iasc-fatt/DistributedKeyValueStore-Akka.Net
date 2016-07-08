@@ -29,10 +29,10 @@ namespace IASC.DistributedKeyValueStore.Client
             throw new NotImplementedException();
         }
 
-        public async Task<string> Lookup(string key)
+        public async Task<Maybe<LookupResult>> Lookup(string key)
         {
             var msg = new LookupValue(key);
-            return await Storage.Ask<string>(new ConsistentHashableEnvelope(msg, msg.Key));
+            return await Storage.Ask<Maybe<LookupResult>>(new ConsistentHashableEnvelope(msg, msg.Key));
         }
 
         public async Task<IEnumerable<string>> Search(string valueToCompare, string comparison)

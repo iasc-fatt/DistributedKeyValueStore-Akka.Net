@@ -40,7 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LookupResult.cs" />
     <Compile Include="InsertValue.cs" />
+    <Compile Include="Maybe.cs" />
     <Compile Include="OpSucced.cs" />
     <Compile Include="SearchValues.cs" />
     <Compile Include="LookupValue.cs" />

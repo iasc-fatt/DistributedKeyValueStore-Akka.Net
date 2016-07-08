@@ -84,6 +84,10 @@
       <Project>{f6280666-ed9b-4e11-8c4c-4044a637a298}</Project>
       <Name>IASC.DistributedKeyValueStore.Client</Name>
     </ProjectReference>
+    <ProjectReference Include="..\IASC.DistributedKeyValueStore.Common\IASC.DistributedKeyValueStore.Common.csproj">
+      <Project>{71d6023e-19f0-46aa-aefe-673d0c3639fc}</Project>
+      <Name>IASC.DistributedKeyValueStore.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
