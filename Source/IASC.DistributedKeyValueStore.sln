@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IASC.DistributedKeyValueSto
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IASC.DistributedKeyValueStore.CLI", "IASC.DistributedKeyValueStore.CLI\IASC.DistributedKeyValueStore.CLI.csproj", "{97E550BB-3B5A-455A-A071-B030B58257EC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6A863E20-C7BC-47C5-A495-B0DC824C71F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IASC.DistributedKeyValueStore.Server.Tests", "Tests\IASC.DistributedKeyValueStore.Server.Tests\IASC.DistributedKeyValueStore.Server.Tests.csproj", "{405526EF-D535-4E2B-AA64-07F0A3D4B952}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,8 +37,15 @@ Global
 		{97E550BB-3B5A-455A-A071-B030B58257EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97E550BB-3B5A-455A-A071-B030B58257EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97E550BB-3B5A-455A-A071-B030B58257EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{405526EF-D535-4E2B-AA64-07F0A3D4B952}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{405526EF-D535-4E2B-AA64-07F0A3D4B952}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{405526EF-D535-4E2B-AA64-07F0A3D4B952}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{405526EF-D535-4E2B-AA64-07F0A3D4B952}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{405526EF-D535-4E2B-AA64-07F0A3D4B952} = {6A863E20-C7BC-47C5-A495-B0DC824C71F6}
 	EndGlobalSection
 EndGlobal
