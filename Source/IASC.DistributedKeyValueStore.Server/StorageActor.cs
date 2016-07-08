@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace IASC.DistributedKeyValueStore.Server
 {
-    internal class StorageActor : ReceiveActor
+    public class StorageActor : ReceiveActor
     {
         private readonly Dictionary<string, string> Storage;
 
