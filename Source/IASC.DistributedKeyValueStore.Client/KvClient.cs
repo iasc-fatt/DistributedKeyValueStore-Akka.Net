@@ -20,7 +20,7 @@ namespace IASC.DistributedKeyValueStore.Client
 
         public async Task Insert(string key, string value)
         {
-            var msg = new InsertMessage(key, value);
+            var msg = new InsertValue(key, value);
             await Storage.Ask(new ConsistentHashableEnvelope(msg, msg.Key));
         }
 
@@ -31,13 +31,13 @@ namespace IASC.DistributedKeyValueStore.Client
 
         public async Task<string> Lookup(string key)
         {
-            var msg = new LookupMessage(key);
+            var msg = new LookupValue(key);
             return await Storage.Ask<string>(new ConsistentHashableEnvelope(msg, msg.Key));
         }
 
         public async Task<IEnumerable<string>> Search(string valueToCompare, string comparison)
         {
-            var msg = new SearchMessage(valueToCompare, comparison);
+            var msg = new SearchValues(valueToCompare, comparison);
             return await Storage.Ask<IEnumerable<string>>(new Broadcast(msg));
         }
 

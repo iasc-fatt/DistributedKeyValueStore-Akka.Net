@@ -15,9 +15,9 @@ namespace IASC.DistributedKeyValueStore.Server.Tests
             var value = Guid.NewGuid().ToString();
             var coordinator = Sys.ActorOf(Props.Create(() => new StorageActor()));
 
-            coordinator.Tell(new InsertMessage("key", value));
+            coordinator.Tell(new InsertValue("key", value));
 
-            ExpectMsg<string>().Should().Be("ok");
+            ExpectMsg<OpSucced>();
         }
     }
 }

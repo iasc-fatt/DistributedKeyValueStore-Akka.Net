@@ -14,14 +14,14 @@ namespace IASC.DistributedKeyValueStore.Server
         {
             Storage = new Dictionary<string, string>();
 
-            Receive<InsertMessage>(message =>
+            Receive<InsertValue>(message =>
             {
                 Console.WriteLine("StorageActor {0} - Inserting key '{1}'", Self, message.Key);
                 Storage[message.Key] = message.Value;
-                Sender.Tell("ok");
+                Sender.Tell(new OpSucced());
             });
 
-            Receive<LookupMessage>(message =>
+            Receive<LookupValue>(message =>
             {
                 Console.WriteLine("StorageActor {0} - Looking up key '{1}'", Self, message.Key);
                 // TODO: handle key not found
@@ -29,7 +29,7 @@ namespace IASC.DistributedKeyValueStore.Server
             });
 
             // TO DO: we need a parent actor that broadcasts the message and joins the responses
-            Receive<SearchMessage>(message =>
+            Receive<SearchValues>(message =>
             {
                 Console.WriteLine("StorageActor {0} - Searching {1} '{2}'", Self, message.Comparison, message.ValueToCompare);
 

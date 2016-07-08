@@ -1,10 +1,10 @@
 ﻿namespace IASC.DistributedKeyValueStore.Common
 {
-    public class LookupMessage
+    public class LookupValue
     {
         public string Key { get; private set; }
 
-        public LookupMessage(string key)
+        public LookupValue(string key)
         {
             Key = key;
         }

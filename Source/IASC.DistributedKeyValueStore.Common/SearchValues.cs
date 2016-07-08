@@ -1,6 +1,6 @@
 ﻿namespace IASC.DistributedKeyValueStore.Common
 {
-    public class SearchMessage
+    public class SearchValues
     {
         public string ValueToCompare { get; private set; }
 
@@ -12,7 +12,7 @@
         /// </summary>
         public string Comparison { get; private set; }
 
-        public SearchMessage(string valueToCompare, string comparison)
+        public SearchValues(string valueToCompare, string comparison)
         {
             ValueToCompare = valueToCompare;
             Comparison = comparison;

@@ -45,11 +45,11 @@ namespace IASC.DistributedKeyValueStore.Server
         private static void SmokeTest(IActorRef storage)
         {
             var key = "asd";
-            var msg = new Common.InsertMessage(key, "value");
+            var msg = new Common.InsertValue(key, "value");
             var r = storage.Ask(new ConsistentHashableEnvelope(msg, msg.Key)).Result;
             //var r = storage.Ask(msg).Result;
 
-            var msg2 = new Common.LookupMessage(key);
+            var msg2 = new Common.LookupValue(key);
             var r2 = storage.Ask<string>(new ConsistentHashableEnvelope(msg2, msg2.Key)).Result;
             //var r2 = storage.Ask<string>(msg2).Result;
 
