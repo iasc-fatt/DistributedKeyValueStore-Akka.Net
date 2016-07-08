@@ -1,17 +1,13 @@
 ﻿using IASC.DistributedKeyValueStore.Client;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace IASC.DistributedKeyValueStore.CLI
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var serverAddress = ConfigurationManager.AppSettings["server.address"];
             using (var client = new KvClient(serverAddress))
@@ -57,7 +53,6 @@ namespace IASC.DistributedKeyValueStore.CLI
                     {
                         break;
                     }
-
                 } while (true);
             }
 
