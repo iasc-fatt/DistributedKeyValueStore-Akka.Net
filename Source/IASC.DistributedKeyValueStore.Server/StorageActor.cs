@@ -16,41 +16,41 @@ namespace IASC.DistributedKeyValueStore.Server
         {
             Storage = new Dictionary<string, string>();
 
-            Receive<InsertValue>(message =>
+            Receive<InsertValue>(msg =>
             {
-                _log.Info("Inserting key '{1}'", Self, message.Key);
+                _log.Info("Inserting key '{1}'", Self, msg.Key);
 
-                Storage[message.Key] = message.Value;
+                Storage[msg.Key] = msg.Value;
                 Sender.Tell(new OpSucced());
             });
 
-            Receive<RemoveValue>(message =>
+            Receive<RemoveValue>(msg =>
             {
-                _log.Info("Removing key '{1}'", Self, message.Key);
+                _log.Info("Removing key '{1}'", Self, msg.Key);
 
-                Storage.Remove(message.Key);
+                Storage.Remove(msg.Key);
                 Sender.Tell(new OpSucced());
             });
 
-            Receive<LookupValue>(message =>
+            Receive<LookupValue>(msg =>
             {
-                _log.Info("Looking up key '{1}'", Self, message.Key);
+                _log.Info("Looking up key '{1}'", Self, msg.Key);
 
                 string value;
-                if (Storage.TryGetValue(message.Key, out value))
-                    Sender.Tell(new LookupResult(message.Key, value).Just());
+                if (Storage.TryGetValue(msg.Key, out value))
+                    Sender.Tell(new LookupResult(msg.Key, value).Just());
                 else
                     Sender.Tell(Maybe.Nothing<LookupResult>());
             });
 
             // TO DO: we need a parent actor that broadcasts the message and joins the responses
-            Receive<SearchValues>(message =>
+            Receive<SearchValues>(msg =>
             {
-                _log.Info("Searching {1} '{2}'", Self, message.Comparison, message.ValueToCompare);
+                _log.Info("Searching {1} '{2}'", Self, msg.Comparison, msg.ValueToCompare);
 
                 const int invalidComparision = -2;
 
-                var expectedComparisonResult = message.Comparison
+                var expectedComparisonResult = msg.Comparison
                     .Select(c => c == 'e' ? 0
                                 : c == 'g' ? 1
                                 : c == 'l' ? -1
@@ -60,7 +60,7 @@ namespace IASC.DistributedKeyValueStore.Server
 
                 var result = Storage
                     .Values
-                    .Where(v => expectedComparisonResult.Contains(v.CompareTo(message.ValueToCompare)))
+                    .Where(v => expectedComparisonResult.Contains(v.CompareTo(msg.ValueToCompare)))
                     .ToList();
 
                 Sender.Tell(result);
