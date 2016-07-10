@@ -14,6 +14,7 @@ namespace IASC.DistributedKeyValueStore.Server.Tests
     public class CoordinatorActorSpecs : TestKit
     {
         private readonly IActorRef sut;
+        private readonly IActorRef storage;
 
         public CoordinatorActorSpecs()
             : base(@"
@@ -29,14 +30,15 @@ namespace IASC.DistributedKeyValueStore.Server.Tests
                 }
               }")
         {
-            sut = Sys.ActorOf(Props.Create(() => new CoordinatorActor(5, 5, 5)), "server");
+            storage = Sys.ActorOf(Props.Create(() => new StorageActor(5)), "storage");
+            sut = Sys.ActorOf(Props.Create(() => new CoordinatorActor(storage, 5, 5)), "server");
         }
 
         [Theory, AutoData]
         public void InsertAndLookupValue_ShouldFindValue(string key, string value)
         {
             sut.Tell(new InsertValue(key, value));
-            ExpectMsg<OpSucced>();
+            ExpectMsg<Maybe<OpSucced>>();
 
             sut.Tell(new LookupValue(key));
 
@@ -65,7 +67,7 @@ namespace IASC.DistributedKeyValueStore.Server.Tests
         public void InsertRemoveAndLookupValue_ShouldReplyEmpty(string key, string value)
         {
             sut.Tell(new InsertValue(key, value));
-            ExpectMsg<OpSucced>();
+            ExpectMsg<Maybe<OpSucced>>();
             sut.Tell(new RemoveValue(key));
             ExpectMsg<OpSucced>();
 
@@ -101,7 +103,7 @@ namespace IASC.DistributedKeyValueStore.Server.Tests
             values.ToList().ForEach(x =>
             {
                 sut.Tell(new InsertValue(x.Key, x.Value));
-                ExpectMsg<OpSucced>();
+                ExpectMsg<Maybe<OpSucced>>();
             });
 
             // exercise

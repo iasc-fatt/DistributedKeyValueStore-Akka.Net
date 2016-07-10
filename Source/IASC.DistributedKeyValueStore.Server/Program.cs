@@ -38,7 +38,9 @@ namespace IASC.DistributedKeyValueStore.Server
             KvActorSystem = ActorSystem.Create("KvActorSystem");
 
             Console.WriteLine("Creating actor supervisory hierarchy");
-			var server = KvActorSystem.ActorOf(Props.Create(() => new CoordinatorActor(maxKeyLength, maxValueLength, maxStorageKeys)), "server");
+            var storageProps = Props.Create(() => new StorageActor(maxStorageKeys)).WithRouter(FromConfig.Instance);
+            var storage = KvActorSystem.ActorOf(storageProps, "storage");
+            var server = KvActorSystem.ActorOf(Props.Create(() => new CoordinatorActor(storage, maxKeyLength, maxValueLength)), "server");
 
             Console.WriteLine("Ready");
             KvActorSystem.WhenTerminated.Wait();

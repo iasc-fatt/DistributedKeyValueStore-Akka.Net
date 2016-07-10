@@ -1,6 +1,6 @@
 ﻿using Akka.Actor;
-using Akka.Event;
 using Akka.Routing;
+using Akka.Event;
 using IASC.DistributedKeyValueStore.Common;
 
 namespace IASC.DistributedKeyValueStore.Server
@@ -11,10 +11,9 @@ namespace IASC.DistributedKeyValueStore.Server
 
         private readonly IActorRef Storage;
 
-		public CoordinatorActor(long maxKeyLength, long maxValueLength, long maxKeysAceptedPerStorage)
+		public CoordinatorActor(IActorRef storage, long maxKeyLength, long maxValueLength)
 		{
-			var props = Props.Create(() => new StorageActor(maxKeysAceptedPerStorage)).WithRouter(FromConfig.Instance);
-			Storage = Context.ActorOf(props, "storage");
+            Storage = storage;
 
 			Receive<InsertValue>(msg =>
 			{
