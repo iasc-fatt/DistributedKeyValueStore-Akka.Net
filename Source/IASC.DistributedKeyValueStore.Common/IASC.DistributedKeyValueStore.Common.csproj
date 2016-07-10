@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="LookupResult.cs" />
     <Compile Include="InsertValue.cs" />
+    <Compile Include="SearchKeys.cs" />
     <Compile Include="RemoveValue.cs" />
     <Compile Include="Maybe.cs" />
     <Compile Include="OpSucced.cs" />

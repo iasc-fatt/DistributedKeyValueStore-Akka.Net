@@ -50,7 +50,7 @@ namespace IASC.DistributedKeyValueStore.CLI
 
                         var value = client.Lookup(key).Result;
 
-                        if(value.Any())
+                        if (value.Any())
                             Console.WriteLine("value found: {0}", value.Single().Value);
                         else
                             Console.WriteLine("key not found");
@@ -62,7 +62,19 @@ namespace IASC.DistributedKeyValueStore.CLI
 
                         var values = client.Search(valueToCompare, comparison).Result;
 
-                        Console.WriteLine("found: {0}", string.Join(",", values));
+                        Console.WriteLine("found: {0}", string.Join(", ", values));
+                    }
+                    else if (action == "keys")
+                    {
+                        var regex = ".*";
+                        if (commandSegments.Length > 1)
+                        {
+                            regex = commandSegments[1];
+                        }
+
+                        var values = client.Keys(regex).Result;
+
+                        Console.WriteLine("found: {0}", string.Join(", ", values));
                     }
                     else if (action == "exit")
                     {

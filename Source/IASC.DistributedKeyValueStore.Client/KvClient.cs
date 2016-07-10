@@ -42,6 +42,12 @@ namespace IASC.DistributedKeyValueStore.Client
             return await Server.Ask<IEnumerable<string>>(msg);
         }
 
+        public async Task<IEnumerable<string>> Keys(string regex)
+        {
+            var msg = new SearchKeys(regex);
+            return await Server.Ask<IEnumerable<string>>(msg);
+        }
+
         public void Dispose()
         {
             KvActorSystem.Terminate().Wait();

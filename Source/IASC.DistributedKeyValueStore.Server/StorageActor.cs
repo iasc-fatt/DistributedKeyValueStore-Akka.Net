@@ -3,8 +3,7 @@ using Akka.Event;
 using IASC.DistributedKeyValueStore.Common;
 using System.Collections.Generic;
 using System.Linq;
-using System.Configuration;
-using System;
+using System.Text.RegularExpressions;
 
 namespace IASC.DistributedKeyValueStore.Server
 {
@@ -70,6 +69,18 @@ namespace IASC.DistributedKeyValueStore.Server
                 var result = Storage
                     .Values
                     .Where(v => expectedComparisonResult.Contains(v.CompareTo(msg.ValueToCompare)))
+                    .ToList();
+
+                Sender.Tell(result);
+            });
+
+            Receive<SearchKeys>(msg =>
+            {
+                var regex = new Regex(msg.Regex);
+
+                var result = Storage
+                    .Keys
+                    .Where(v => regex.IsMatch(v))
                     .ToList();
 
                 Sender.Tell(result);

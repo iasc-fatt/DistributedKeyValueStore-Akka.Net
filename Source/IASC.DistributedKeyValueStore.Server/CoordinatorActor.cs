@@ -50,7 +50,15 @@ namespace IASC.DistributedKeyValueStore.Server
 				var joiner = Context.ActorOf(Props.Create(() => new SearchValuesActor(Storage, Sender)));
 				joiner.Tell(msg);
 			});
-		}
+
+            Receive<SearchKeys>(msg =>
+            {
+                _log.Info("Searching keys");
+
+                var joiner = Context.ActorOf(Props.Create(() => new SearchKeysActor(Storage, Sender)));
+                joiner.Tell(msg);
+            });
+        }
 
 		private bool CheckMaxArgumentsLength(InsertValue msg, long maxKeyLength, long maxValueLength)
 		{
