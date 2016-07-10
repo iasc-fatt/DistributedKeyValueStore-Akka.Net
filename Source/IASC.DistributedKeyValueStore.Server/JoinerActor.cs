@@ -10,12 +10,12 @@ namespace IASC.DistributedKeyValueStore.Server
     /// </summary>
     /// <typeparam name="TMessage">The type of the message that must be broadcasted</typeparam>
     /// <typeparam name="TResponse">The type of the expected response of each routee</typeparam>
-    public class JoinerActor<TMessage, TResponse> : ReceiveActor
+    public class JoinerActor<TMessage, TResponse, TContainer> : ReceiveActor
     {
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
 
         private bool _processing = false;
-        private TResponse _joinedResponse;
+        private TContainer _joinedResponse;
         private int _nrOfReceivedResponses = 0;
 
         /// <param name="router">Router actor</param>
@@ -26,8 +26,8 @@ namespace IASC.DistributedKeyValueStore.Server
         public JoinerActor(
             IActorRef router,
             int nrOfRoutees,
-            Func<TResponse, TResponse, TResponse> joiner,
-            TResponse initialValue,
+            Func<TContainer, TResponse, TContainer> joiner,
+            TContainer initialValue,
             IActorRef listener)
         {
             this._joinedResponse = initialValue;

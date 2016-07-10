@@ -76,6 +76,12 @@ namespace IASC.DistributedKeyValueStore.CLI
 
                         Console.WriteLine("found: {0}", string.Join(", ", values));
                     }
+                    else if (action == "status")
+                    {
+                        var statuses = client.HealthCheck().Result;
+
+                        Console.WriteLine("Status:\n{0}", string.Join("\n", statuses));
+                    }
                     else if (action == "exit")
                     {
                         break;

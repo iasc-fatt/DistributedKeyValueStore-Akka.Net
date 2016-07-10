@@ -5,13 +5,13 @@ using System.Linq;
 
 namespace IASC.DistributedKeyValueStore.Server
 {
-    internal class SearchKeysActor : JoinerActor<SearchKeys, IEnumerable<string>>
+    internal class StringJoinerActor<TMessage> : JoinerActor<TMessage, string, IEnumerable<string>>
     {
-        public SearchKeysActor(IActorRef storage, IActorRef listener)
+        public StringJoinerActor(IActorRef storage, IActorRef listener)
             : base(
                 router: storage,
                 nrOfRoutees: 5, //TO DO: read from config
-                joiner: (a, b) => a.Concat(b).ToList(),
+                joiner: (a, b) => a.Concat(new[] { b }).ToList(),
                 initialValue: new string[0],
                 listener: listener)
         { }

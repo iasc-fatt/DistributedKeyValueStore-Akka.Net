@@ -47,7 +47,7 @@ namespace IASC.DistributedKeyValueStore.Server
 			{
 				_log.Info("Searching {0} '{1}'", msg.Comparison, msg.ValueToCompare);
 
-				var joiner = Context.ActorOf(Props.Create(() => new SearchValuesActor(Storage, Sender)));
+				var joiner = Context.ActorOf(Props.Create(() => new ListJoinerActor<SearchValues>(Storage, Sender)));
 				joiner.Tell(msg);
 			});
 
@@ -55,7 +55,15 @@ namespace IASC.DistributedKeyValueStore.Server
             {
                 _log.Info("Searching keys");
 
-                var joiner = Context.ActorOf(Props.Create(() => new SearchKeysActor(Storage, Sender)));
+                var joiner = Context.ActorOf(Props.Create(() => new ListJoinerActor<SearchKeys>(Storage, Sender)));
+                joiner.Tell(msg);
+            });
+
+            Receive<HealthCheck>(msg =>
+            {
+                _log.Info("Requested HealthCheck");
+
+                var joiner = Context.ActorOf(Props.Create(() => new StringJoinerActor<HealthCheck>(Storage, Sender)));
                 joiner.Tell(msg);
             });
         }

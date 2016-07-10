@@ -77,11 +77,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JoinerActor.cs" />
+    <Compile Include="StringJoinerActor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CoordinatorActor.cs" />
-    <Compile Include="SearchKeysActor.cs" />
-    <Compile Include="SearchValuesActor.cs" />
+    <Compile Include="ListJoinerActor.cs" />
     <Compile Include="StorageActor.cs" />
   </ItemGroup>
   <ItemGroup>

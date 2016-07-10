@@ -48,6 +48,12 @@ namespace IASC.DistributedKeyValueStore.Client
             return await Server.Ask<IEnumerable<string>>(msg);
         }
 
+        public async Task<IEnumerable<string>> HealthCheck()
+        {
+            var msg = new HealthCheck();
+            return await Server.Ask<IEnumerable<string>>(msg);
+        }
+
         public void Dispose()
         {
             KvActorSystem.Terminate().Wait();

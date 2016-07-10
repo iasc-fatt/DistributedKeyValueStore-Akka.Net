@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace IASC.DistributedKeyValueStore.Server
 {
-    internal class SearchValuesActor : JoinerActor<SearchValues, IEnumerable<string>>
+    internal class ListJoinerActor<TMessage> : JoinerActor<TMessage, IEnumerable<string>, IEnumerable<string>>
     {
-        public SearchValuesActor(IActorRef storage, IActorRef listener)
+        public ListJoinerActor(IActorRef storage, IActorRef listener)
             : base(
                 router: storage,
                 nrOfRoutees: 5, //TO DO: read from config
