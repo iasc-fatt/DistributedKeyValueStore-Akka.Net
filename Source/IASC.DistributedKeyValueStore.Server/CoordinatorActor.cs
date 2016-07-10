@@ -11,16 +11,20 @@ namespace IASC.DistributedKeyValueStore.Server
 
         private readonly IActorRef Storage;
 
-		public CoordinatorActor(long maxKeyLength, long maxValueLength)
+		public CoordinatorActor(long maxKeyLength, long maxValueLength, long maxKeysAceptedPerStorage)
 		{
-			var props = Props.Create<StorageActor>().WithRouter(FromConfig.Instance);
+			var props = Props.Create(() => new StorageActor(maxKeysAceptedPerStorage)).WithRouter(FromConfig.Instance);
 			Storage = Context.ActorOf(props, "storage");
 
 			Receive<InsertValue>(msg =>
 			{
 				_log.Info("Inserting key '{0}'", msg.Key);
 
-				if (CheckMaxArgumentsLength(msg, maxKeyLength, maxValueLength)) { return; }
+				if (CheckMaxArgumentsLength(msg, maxKeyLength, maxValueLength))
+                {
+                    Sender.Tell(Maybe.Nothing<OpSucced>());
+                    return;
+                }
 
 				Storage.Forward(new ConsistentHashableEnvelope(msg, msg.Key));
 			});
@@ -51,9 +55,17 @@ namespace IASC.DistributedKeyValueStore.Server
 		private bool CheckMaxArgumentsLength(InsertValue msg, long maxKeyLength, long maxValueLength)
 		{
 			if (msg.Key.Length > maxKeyLength)
-			{ _log.Error("Key length is superior to max allowed: '{0}'", maxKeyLength); return true; }	
+			{
+                _log.Error("Key length is superior to max allowed: '{0}'", maxKeyLength);
+                return true;
+            }
+
 			if (msg.Value.Length > maxValueLength)
-			{ _log.Error("Key value is superior to max allowed: '{0}'", maxValueLength); return true; }
+			{
+                _log.Error("Key value is superior to max allowed: '{0}'", maxValueLength);
+                return true;
+            }
+
 			return false;
 		}
 

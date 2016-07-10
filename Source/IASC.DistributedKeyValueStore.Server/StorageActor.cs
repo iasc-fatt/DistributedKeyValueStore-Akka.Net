@@ -3,6 +3,8 @@ using Akka.Event;
 using IASC.DistributedKeyValueStore.Common;
 using System.Collections.Generic;
 using System.Linq;
+using System.Configuration;
+using System;
 
 namespace IASC.DistributedKeyValueStore.Server
 {
@@ -12,7 +14,7 @@ namespace IASC.DistributedKeyValueStore.Server
 
         private readonly Dictionary<string, string> Storage;
 
-        public StorageActor()
+        public StorageActor(long maxValuesAcepted)
         {
             Storage = new Dictionary<string, string>();
 
@@ -20,8 +22,15 @@ namespace IASC.DistributedKeyValueStore.Server
             {
                 _log.Info("Inserting key '{0}'", msg.Key);
 
+                if (Storage.Count >= maxValuesAcepted)
+                {
+                    _log.Info("Max memory. Not storing key '{0}'", msg.Key);
+                    Sender.Tell(Maybe.Nothing<OpSucced>());
+                    return;
+                }
+
                 Storage[msg.Key] = msg.Value;
-                Sender.Tell(new OpSucced());
+                Sender.Tell(new OpSucced().Just());
             });
 
             Receive<RemoveValue>(msg =>

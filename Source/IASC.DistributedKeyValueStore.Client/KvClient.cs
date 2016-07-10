@@ -18,10 +18,10 @@ namespace IASC.DistributedKeyValueStore.Client
             Server = KvActorSystem.ActorSelection(serverAddress + "/user/server");
         }
 
-        public async Task Insert(string key, string value)
+        public async Task<Maybe<OpSucced>> Insert(string key, string value)
         {
             var msg = new InsertValue(key, value);
-            await Server.Ask(msg);
+            return await Server.Ask<Maybe<OpSucced>>(msg);
         }
 
         public async Task Remove(string key)

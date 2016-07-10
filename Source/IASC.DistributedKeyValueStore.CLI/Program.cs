@@ -29,9 +29,12 @@ namespace IASC.DistributedKeyValueStore.CLI
                         var key = commandSegments[1];
                         var value = commandSegments[2];
 
-                        client.Insert(key, value).Wait();
+                        var succed = client.Insert(key, value).Result;
 
-                        Console.WriteLine("inserted");
+                        if (succed.Any())
+                            Console.WriteLine("inserted");
+                        else
+                            Console.WriteLine("value not inserted");
                     }
                     else if (action == "remove")
                     {
