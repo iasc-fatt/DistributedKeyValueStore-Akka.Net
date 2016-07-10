@@ -11,39 +11,51 @@ namespace IASC.DistributedKeyValueStore.Server
 
         private readonly IActorRef Storage;
 
-        public CoordinatorActor()
-        {
-            var props = Props.Create<StorageActor>().WithRouter(FromConfig.Instance);
-            Storage = Context.ActorOf(props, "storage");
+		public CoordinatorActor(long maxKeyLength, long maxValueLength)
+		{
+			var props = Props.Create<StorageActor>().WithRouter(FromConfig.Instance);
+			Storage = Context.ActorOf(props, "storage");
 
-            Receive<InsertValue>(msg =>
-            {
-                _log.Info("Inserting key '{0}'", msg.Key);
+			Receive<InsertValue>(msg =>
+			{
+				_log.Info("Inserting key '{0}'", msg.Key);
 
-                Storage.Forward(new ConsistentHashableEnvelope(msg, msg.Key));
-            });
+				if (CheckMaxArgumentsLength(msg, maxKeyLength, maxValueLength)) { return; }
 
-            Receive<RemoveValue>(msg =>
-            {
-                _log.Info("Removing key '{0}'", msg.Key);
+				Storage.Forward(new ConsistentHashableEnvelope(msg, msg.Key));
+			});
 
-                Storage.Forward(new ConsistentHashableEnvelope(msg, msg.Key));
-            });
+			Receive<RemoveValue>(msg =>
+			{
+				_log.Info("Removing key '{0}'", msg.Key);
 
-            Receive<LookupValue>(msg =>
-            {
-                _log.Info("Looking up key '{0}'", msg.Key);
+				Storage.Forward(new ConsistentHashableEnvelope(msg, msg.Key));
+			});
 
-                Storage.Forward(new ConsistentHashableEnvelope(msg, msg.Key));
-            });
+			Receive<LookupValue>(msg =>
+			{
+				_log.Info("Looking up key '{0}'", msg.Key);
 
-            Receive<SearchValues>(msg =>
-            {
-                _log.Info("Searching {0} '{1}'", msg.Comparison, msg.ValueToCompare);
+				Storage.Forward(new ConsistentHashableEnvelope(msg, msg.Key));
+			});
 
-                var joiner = Context.ActorOf(Props.Create(() => new SearchValuesActor(Storage, Sender)));
-                joiner.Tell(msg);
-            });
-        }
+			Receive<SearchValues>(msg =>
+			{
+				_log.Info("Searching {0} '{1}'", msg.Comparison, msg.ValueToCompare);
+
+				var joiner = Context.ActorOf(Props.Create(() => new SearchValuesActor(Storage, Sender)));
+				joiner.Tell(msg);
+			});
+		}
+
+		private bool CheckMaxArgumentsLength(InsertValue msg, long maxKeyLength, long maxValueLength)
+		{
+			if (msg.Key.Length > maxKeyLength)
+			{ _log.Error("Key length is superior to max allowed: '{0}'", maxKeyLength); return true; }	
+			if (msg.Value.Length > maxValueLength)
+			{ _log.Error("Key value is superior to max allowed: '{0}'", maxValueLength); return true; }
+			return false;
+		}
+
     }
 }

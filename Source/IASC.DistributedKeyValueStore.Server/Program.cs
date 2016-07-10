@@ -2,12 +2,16 @@
 using Akka.Routing;
 using NDesk.Options;
 using System;
+using System.Configuration;
 
 namespace IASC.DistributedKeyValueStore.Server
 {
     internal class Program
     {
+
         private static ActorSystem KvActorSystem;
+		private static readonly long maxKeyLength = Convert.ToInt64(ConfigurationManager.AppSettings["maxKeyLength"]);
+		private static readonly long maxValueLength = Convert.ToInt64(ConfigurationManager.AppSettings["maxValueLength"]);
 
         private static void Main(string[] args)
         {
@@ -33,7 +37,7 @@ namespace IASC.DistributedKeyValueStore.Server
             KvActorSystem = ActorSystem.Create("KvActorSystem");
 
             Console.WriteLine("Creating actor supervisory hierarchy");
-            var server = KvActorSystem.ActorOf(Props.Create<CoordinatorActor>(), "server");
+			var server = KvActorSystem.ActorOf(Props.Create(() => new CoordinatorActor(maxKeyLength, maxValueLength)), "server");
 
             Console.WriteLine("Ready");
             KvActorSystem.WhenTerminated.Wait();
