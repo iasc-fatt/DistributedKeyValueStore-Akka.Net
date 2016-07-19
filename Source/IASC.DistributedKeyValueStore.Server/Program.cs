@@ -38,7 +38,9 @@ namespace IASC.DistributedKeyValueStore.Server
 
             Console.WriteLine("Creating actor supervisory hierarchy");
 
-            var supervisorStrategy = new OneForOneStrategy(-1, TimeSpan.FromSeconds(30), x => Directive.Restart);
+            var supervisorStrategy = new OneForOneStrategy(-1, TimeSpan.FromSeconds(30), x => {
+                return Directive.Restart;
+            });
             var storageProps = Props.Create(() => new StorageActor(maxStorageKeys))
                 .WithRouter(FromConfig.Instance)
                 .WithSupervisorStrategy(supervisorStrategy);

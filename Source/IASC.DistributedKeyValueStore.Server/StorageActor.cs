@@ -104,16 +104,9 @@ namespace IASC.DistributedKeyValueStore.Server
             {
                 _log.Info("Mmm me muero, con hash '{0}'", this.GetHashCode());
                 Sender.Tell(new OpSucced().Just());
-                Self.Tell(PoisonPill.Instance);
+                throw new Exception();
+                return true;
             });
-        }
-
-        protected override SupervisorStrategy SupervisorStrategy()
-        {
-            return new OneForOneStrategy( //or AllForOneStrategy
-                maxNrOfRetries: 10,
-                withinTimeRange: TimeSpan.FromSeconds(30),
-                localOnlyDecider: x => Directive.Restart);
         }
     }
 }
