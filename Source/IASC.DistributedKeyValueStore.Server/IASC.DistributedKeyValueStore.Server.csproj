@@ -77,6 +77,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JoinerActor.cs" />
+    <Compile Include="ActorRefJoinerActor.cs" />
+    <Compile Include="StorageIdentity.cs" />
     <Compile Include="StringJoinerActor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -40,9 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="StorageHash.cs" />
     <Compile Include="LookupResult.cs" />
     <Compile Include="InsertValue.cs" />
     <Compile Include="HealthCheck.cs" />
+    <Compile Include="KillActor.cs" />
     <Compile Include="SearchKeys.cs" />
     <Compile Include="RemoveValue.cs" />
     <Compile Include="Maybe.cs" />

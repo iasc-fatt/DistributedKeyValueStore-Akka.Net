@@ -1,6 +1,7 @@
 ﻿using Akka.Actor;
 using Akka.Event;
 using IASC.DistributedKeyValueStore.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -15,6 +16,7 @@ namespace IASC.DistributedKeyValueStore.Server
 
         public StorageActor(long maxValuesAcepted)
         {
+            _log.Info("Initializing storage actor with hash '{0}'", this.GetHashCode());
             Storage = new Dictionary<string, string>();
 
             Receive<InsertValue>(msg =>
@@ -92,6 +94,26 @@ namespace IASC.DistributedKeyValueStore.Server
                 var result = string.Format("Actor {0} ({1})", this.GetHashCode(), keys);
                 Sender.Tell(result);
             });
+
+            Receive<StorageHash>(msg =>
+            {
+                Sender.Tell(new StorageIdentity(this.GetHashCode(), Self));
+            });
+
+            Receive<KillActor>(msg =>
+            {
+                _log.Info("Mmm me muero, con hash '{0}'", this.GetHashCode());
+                Sender.Tell(new OpSucced().Just());
+                Self.Tell(PoisonPill.Instance);
+            });
+        }
+
+        protected override SupervisorStrategy SupervisorStrategy()
+        {
+            return new OneForOneStrategy( //or AllForOneStrategy
+                maxNrOfRetries: 10,
+                withinTimeRange: TimeSpan.FromSeconds(30),
+                localOnlyDecider: x => Directive.Restart);
         }
     }
 }

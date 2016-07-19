@@ -82,6 +82,15 @@ namespace IASC.DistributedKeyValueStore.CLI
 
                         Console.WriteLine("Status:\n{0}", string.Join("\n", statuses));
                     }
+                    else if (action == "kill")
+                    {
+                        var succeed = client.KillActor(int.Parse(commandSegments[1])).Result;
+
+                        if (succeed.Any())
+                            Console.WriteLine("Killed: {0}", commandSegments[1]);
+                        else
+                            Console.WriteLine("Could not be killed");
+                    }
                     else if (action == "exit")
                     {
                         break;
