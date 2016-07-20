@@ -81,6 +81,7 @@
     <Compile Include="JoinerActor.cs" />
     <Compile Include="ActorRefJoinerActor.cs" />
     <Compile Include="PathSelectorEnvelope.cs" />
+    <Compile Include="SupervisorActor.cs" />
     <Compile Include="RouterActor.cs" />
     <Compile Include="StorageIdentity.cs" />
     <Compile Include="StringJoinerActor.cs" />

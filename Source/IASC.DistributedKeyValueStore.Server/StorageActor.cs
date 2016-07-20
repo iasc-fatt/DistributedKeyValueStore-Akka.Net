@@ -102,7 +102,7 @@ namespace IASC.DistributedKeyValueStore.Server
 
             Receive<KillActor>(msg =>
             {
-                _log.Info("Mmm me muero, con hash '{0}'", this.GetHashCode());
+                _log.Info("Killed StorageActor {0} {1}", Self.Path.Name, this.GetHashCode());
                 Sender.Tell(new OpSucced().Just());
                 throw new Exception();
                 return true;

@@ -1,5 +1,4 @@
 ﻿using Akka.Actor;
-using Akka.Routing;
 using IASC.DistributedKeyValueStore.Common;
 using System;
 using System.Collections.Generic;
@@ -15,7 +14,7 @@ namespace IASC.DistributedKeyValueStore.Client
         public KvClient(string serverAddress)
         {
             KvActorSystem = ActorSystem.Create("KvActorSystem");
-            Server = KvActorSystem.ActorSelection(serverAddress + "/user/server");
+            Server = KvActorSystem.ActorSelection(serverAddress + "/user/supervisor/server");
         }
 
         public async Task<Maybe<OpSucced>> Insert(string key, string value)

@@ -13,9 +13,9 @@ namespace IASC.DistributedKeyValueStore.Server
 
         private readonly IActorRef Storage;
 
-        public CoordinatorActor(int storagesCount, long maxStorageKeys, long maxKeyLength, long maxValueLength)
+        public CoordinatorActor(IActorRef storage, long maxKeyLength, long maxValueLength)
         {
-            Storage = CreateStorages(storagesCount, maxStorageKeys);
+            Storage = storage;
 
             Receive<InsertValue>(msg =>
             {

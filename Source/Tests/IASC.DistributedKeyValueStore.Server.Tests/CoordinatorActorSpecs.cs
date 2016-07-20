@@ -30,7 +30,8 @@ namespace IASC.DistributedKeyValueStore.Server.Tests
                 }
               }")
         {
-            sut = Sys.ActorOf(Props.Create(() => new CoordinatorActor(1, 5, 5, 5)), "server");
+            storage = Sys.ActorOf(Props.Create(() => new StorageActor(5)), "storage");
+            sut = Sys.ActorOf(Props.Create(() => new CoordinatorActor(storage, 5, 5)), "server");
         }
 
         [Theory, AutoData]
