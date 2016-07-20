@@ -1,5 +1,4 @@
 ﻿using Akka.Actor;
-using Akka.Routing;
 using NDesk.Options;
 using System;
 using System.Collections.Generic;
@@ -39,11 +38,13 @@ namespace IASC.DistributedKeyValueStore.Server
 
             Console.WriteLine("Creating actor supervisory hierarchy");
 
-            var supervisorStrategy = new OneForOneStrategy(-1, TimeSpan.FromSeconds(30), x => {
+            var supervisorStrategy = new OneForOneStrategy(-1, TimeSpan.FromSeconds(30), x =>
+            {
                 return Directive.Restart;
             });
 
-            var storageProps = Props.Create(() => new StorageActor(maxStorageKeys));
+            var storageProps = Props.Create(() => new StorageActor(maxStorageKeys))
+                .WithSupervisorStrategy(supervisorStrategy);
 
             var storage1 = KvActorSystem.ActorOf(storageProps, "s1");
             var storage2 = KvActorSystem.ActorOf(storageProps, "s2");

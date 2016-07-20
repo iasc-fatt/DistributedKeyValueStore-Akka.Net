@@ -2,7 +2,6 @@
 using Akka.Event;
 using Akka.Routing;
 using IASC.DistributedKeyValueStore.Common;
-using System.Collections.Generic;
 
 namespace IASC.DistributedKeyValueStore.Server
 {
@@ -71,19 +70,15 @@ namespace IASC.DistributedKeyValueStore.Server
             {
                 _log.Info("Requested KillActor '{0}'", msg.Path);
 
-                var task = Storage.Ask<bool>(new HasRouteeByPath(msg.Path));
+                var hasRoutee = Storage.Ask<bool>(new HasRouteeByPath(msg.Path)).Result;
 
-                task.ContinueWith((response) =>
+                if (!hasRoutee)
                 {
-                    if (!response.Result)
-                    {
-                        _log.Info("Storage routees does not contain hash '{0}'", msg.Path);
-                        Sender.Tell(Maybe.Nothing<OpSucced>());
-                    }
+                    _log.Info("Storage routees does not contain an actor with path '{0}'", msg.Path);
+                    Sender.Tell(Maybe.Nothing<OpSucced>());
+                }
 
-                    Storage.Forward(new PathSelectorEnvelope(msg, msg.Path));
-                });
-                
+                Storage.Forward(new PathSelectorEnvelope(Kill.Instance, msg.Path));
             });
         }
 

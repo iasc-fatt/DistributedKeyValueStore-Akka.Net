@@ -14,6 +14,7 @@ namespace IASC.DistributedKeyValueStore.Server
         public RouterActor(IEnumerable<IActorRef> routees)
         {
             Routees = routees;
+            ProcessRoutees();
 
             Receive<ConsistentHashableEnvelope>((envelope) =>
             {
@@ -25,37 +26,27 @@ namespace IASC.DistributedKeyValueStore.Server
 
             Receive<Broadcast>((envelope) =>
             {
-                var msg = envelope.Message;
-
                 Routees.ToList().ForEach((r) =>
                 {
-                    r.Forward(msg);
+                    r.Forward(envelope.Message);
                 });
             });
 
             Receive<PathSelectorEnvelope>((envelope) =>
             {
-                var msg = envelope.Message;
-                var path = envelope.Path;
-                IActorRef routee;
-
-                if (PathDict.TryGetValue(path, out routee))
-                    routee.Forward(msg);
+                if (PathDict.ContainsKey(envelope.Path))
+                    PathDict[envelope.Path].Forward(envelope.Message);
             });
 
             Receive<HasRouteeByPath>(msg =>
             {
+                Sender.Tell(PathDict.ContainsKey(msg.Path));
             });
 
             Receive<RouteesCount>(msg =>
             {
                 Sender.Tell(Routees.Count());
             });
-        }
-
-        public bool ContainsRouteeByPath(string path)
-        {
-            return PathDict.ContainsKey(path);
         }
 
         private void ProcessRoutees()

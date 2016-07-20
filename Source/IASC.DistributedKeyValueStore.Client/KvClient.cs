@@ -54,9 +54,9 @@ namespace IASC.DistributedKeyValueStore.Client
             return await Server.Ask<IEnumerable<string>>(msg);
         }
 
-        public async Task<Maybe<OpSucced>> KillActor(string hash)
+        public async Task<Maybe<OpSucced>> KillActor(string path)
         {
-            var msg = new KillActor(hash);
+            var msg = new KillActor(path);
             return await Server.Ask<Maybe<OpSucced>>(msg);
         }
 

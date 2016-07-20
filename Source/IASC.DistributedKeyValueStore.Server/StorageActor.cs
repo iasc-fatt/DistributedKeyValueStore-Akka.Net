@@ -91,7 +91,7 @@ namespace IASC.DistributedKeyValueStore.Server
             Receive<HealthCheck>(msg =>
             {
                 var keys = string.Join(", ", Storage.Keys);
-                var result = string.Format("Actor {0} ({1})", this.GetHashCode(), keys);
+                var result = string.Format("Actor {0} {1} ({2})", Self.Path.Name, this.GetHashCode(), keys);
                 Sender.Tell(result);
             });
 
