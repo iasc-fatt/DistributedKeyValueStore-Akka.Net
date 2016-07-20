@@ -6,13 +6,13 @@ namespace IASC.DistributedKeyValueStore.Server
 {
     public class SupervisorActor : ReceiveActor
     {
-        public SupervisorActor(int storagesCount, long maxStorageKeys, long maxKeyLength, long maxValueLength)
+        public SupervisorActor(long storagesAmount, long maxStorageKeys, long maxKeyLength, long maxValueLength)
         {
             var storageProps = Props.Create(() => new StorageActor(maxStorageKeys))
                 .WithSupervisorStrategy(new OneForOneStrategy(-1, TimeSpan.FromSeconds(30), x => Directive.Restart));
 
             var storages = new List<IActorRef>();
-            for (int i = 1; i <= storagesCount; i++)
+            for (int i = 1; i <= storagesAmount; i++)
             {
                 storages.Add(Context.ActorOf(storageProps, "s" + i));
             }

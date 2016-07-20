@@ -11,6 +11,7 @@ namespace IASC.DistributedKeyValueStore.Server
         private static readonly long maxKeyLength = Convert.ToInt64(ConfigurationManager.AppSettings["maxKeyLength"]);
         private static readonly long maxValueLength = Convert.ToInt64(ConfigurationManager.AppSettings["maxValueLength"]);
         private static readonly long maxStorageKeys = Convert.ToInt64(ConfigurationManager.AppSettings["maxStorageKeys"]);
+        private static readonly long storagesAmount = Convert.ToInt64(ConfigurationManager.AppSettings["storagesAmount"]);
 
         private static void Main(string[] args)
         {
@@ -36,7 +37,7 @@ namespace IASC.DistributedKeyValueStore.Server
             KvActorSystem = ActorSystem.Create("KvActorSystem");
 
             Console.WriteLine("Creating SupervisorActor");
-            var supervisor = KvActorSystem.ActorOf(Props.Create(() => new SupervisorActor(5, maxStorageKeys, maxKeyLength, maxValueLength)), "supervisor");
+            var supervisor = KvActorSystem.ActorOf(Props.Create(() => new SupervisorActor(storagesAmount, maxStorageKeys, maxKeyLength, maxValueLength)), "supervisor");
 
             Console.WriteLine("Ready");
             KvActorSystem.WhenTerminated.Wait();
