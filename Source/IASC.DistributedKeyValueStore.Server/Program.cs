@@ -2,6 +2,7 @@
 using Akka.Routing;
 using NDesk.Options;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 
 namespace IASC.DistributedKeyValueStore.Server
@@ -41,12 +42,20 @@ namespace IASC.DistributedKeyValueStore.Server
             var supervisorStrategy = new OneForOneStrategy(-1, TimeSpan.FromSeconds(30), x => {
                 return Directive.Restart;
             });
-            var storageProps = Props.Create(() => new StorageActor(maxStorageKeys))
-                .WithRouter(FromConfig.Instance)
-                .WithSupervisorStrategy(supervisorStrategy);
 
-            var storage = KvActorSystem.ActorOf(storageProps, "storage");
-            var server = KvActorSystem.ActorOf(Props.Create(() => new CoordinatorActor(storage, maxKeyLength, maxValueLength)), "server");
+            var storageProps = Props.Create(() => new StorageActor(maxStorageKeys));
+
+            var storage1 = KvActorSystem.ActorOf(storageProps, "s1");
+            var storage2 = KvActorSystem.ActorOf(storageProps, "s2");
+
+            var storages = new List<IActorRef>()
+            {
+                storage1,
+                storage2
+            };
+
+            var storageRouter = KvActorSystem.ActorOf(Props.Create(() => new RouterActor(storages)), "router");
+            var server = KvActorSystem.ActorOf(Props.Create(() => new CoordinatorActor(storageRouter, maxKeyLength, maxValueLength)), "server");
 
             Console.WriteLine("Ready");
             KvActorSystem.WhenTerminated.Wait();

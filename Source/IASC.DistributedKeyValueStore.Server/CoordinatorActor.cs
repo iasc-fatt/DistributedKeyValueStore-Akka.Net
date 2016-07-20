@@ -11,12 +11,10 @@ namespace IASC.DistributedKeyValueStore.Server
         private readonly ILoggingAdapter _log = Logging.GetLogger(Context);
 
         private readonly IActorRef Storage;
-        private Dictionary<int, IActorRef> StorageRoutees;
 
         public CoordinatorActor(IActorRef storage, long maxKeyLength, long maxValueLength)
         {
             Storage = storage;
-            RefreshStorageRoutees();
 
             Receive<InsertValue>(msg =>
             {
@@ -71,29 +69,22 @@ namespace IASC.DistributedKeyValueStore.Server
 
             Receive<KillActor>(msg =>
             {
-                _log.Info("Requested KillActor");
+                _log.Info("Requested KillActor '{0}'", msg.Path);
 
-                if (!StorageRoutees.ContainsKey(msg.Hash))
+                var task = Storage.Ask<bool>(new HasRouteeByPath(msg.Path));
+
+                task.ContinueWith((response) =>
                 {
-                    _log.Info("Storage routees does not contain hash '{0}'", msg.Hash);
-                    Sender.Tell(Maybe.Nothing<OpSucced>());
-                }
+                    if (!response.Result)
+                    {
+                        _log.Info("Storage routees does not contain hash '{0}'", msg.Path);
+                        Sender.Tell(Maybe.Nothing<OpSucced>());
+                    }
 
-                var actor = StorageRoutees[msg.Hash];
-                actor.Forward(msg);
+                    Storage.Forward(new PathSelectorEnvelope(msg, msg.Path));
+                });
+                
             });
-
-            Receive<Dictionary<int, IActorRef>>(msg =>
-            {
-                _log.Info("Received storage routees");
-                StorageRoutees = msg;
-            });
-        }
-
-        private void RefreshStorageRoutees()
-        {
-            var joiner = Context.ActorOf(Props.Create(() => new ActorRefJoinerActor<StorageHash>(Storage, Self)));
-            joiner.Tell(new StorageHash());
         }
 
         private bool CheckMaxArgumentsLength(InsertValue msg, long maxKeyLength, long maxValueLength)

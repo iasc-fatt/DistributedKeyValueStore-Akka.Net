@@ -76,8 +76,11 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HasRouteeByPath.cs" />
     <Compile Include="JoinerActor.cs" />
     <Compile Include="ActorRefJoinerActor.cs" />
+    <Compile Include="PathSelectorEnvelope.cs" />
+    <Compile Include="RouterActor.cs" />
     <Compile Include="StorageIdentity.cs" />
     <Compile Include="StringJoinerActor.cs" />
     <Compile Include="Program.cs" />

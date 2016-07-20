@@ -2,11 +2,11 @@
 {
     public class KillActor
     {
-        public int Hash { get; private set; }
+        public string Path { get; private set; }
 
-        public KillActor(int hash)
+        public KillActor(string path)
         {
-            Hash = hash;
+            Path = path;
         }
     }
 }
