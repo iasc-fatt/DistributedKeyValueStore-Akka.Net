@@ -2,6 +2,8 @@
 using Akka.Event;
 using Akka.Routing;
 using IASC.DistributedKeyValueStore.Common;
+using System;
+using System.Collections.Generic;
 
 namespace IASC.DistributedKeyValueStore.Server
 {
@@ -11,9 +13,9 @@ namespace IASC.DistributedKeyValueStore.Server
 
         private readonly IActorRef Storage;
 
-        public CoordinatorActor(IActorRef storage, long maxKeyLength, long maxValueLength)
+        public CoordinatorActor(int storagesCount, long maxStorageKeys, long maxKeyLength, long maxValueLength)
         {
-            Storage = storage;
+            Storage = CreateStorages(storagesCount, maxStorageKeys);
 
             Receive<InsertValue>(msg =>
             {
@@ -78,8 +80,25 @@ namespace IASC.DistributedKeyValueStore.Server
                     Sender.Tell(Maybe.Nothing<OpSucced>());
                 }
 
-                Storage.Forward(new PathSelectorEnvelope(Kill.Instance, msg.Path));
+                Storage.Forward(new PathSelectorEnvelope(msg, msg.Path));
             });
+        }
+
+        private IActorRef CreateStorages(int storagesCount, long maxStorageKeys)
+        {
+            var storageProps = Props.Create(() => new StorageActor(maxStorageKeys))
+                .WithSupervisorStrategy(new OneForOneStrategy(-1, TimeSpan.FromSeconds(30), x => Directive.Restart));
+
+            var storages = new List<IActorRef>();
+            for (int i = 1; i <= storagesCount; i++)
+            {
+                storages.Add(Context.ActorOf(storageProps, "s" + i));
+            }
+
+            var routerProps = Props.Create(() => new RouterActor(storages))
+                .WithSupervisorStrategy(new AllForOneStrategy(-1, TimeSpan.FromSeconds(30), x => Directive.Restart));
+
+            return Context.ActorOf(routerProps, "router");
         }
 
         private bool CheckMaxArgumentsLength(InsertValue msg, long maxKeyLength, long maxValueLength)

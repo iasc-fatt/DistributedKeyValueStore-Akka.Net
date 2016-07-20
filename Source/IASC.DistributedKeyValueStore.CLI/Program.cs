@@ -84,7 +84,7 @@ namespace IASC.DistributedKeyValueStore.CLI
                     }
                     else if (action == "kill")
                     {
-                        var succeed = client.KillActor(string.Concat("/user/", commandSegments[1])).Result;
+                        var succeed = client.KillActor(string.Concat("/user/server/", commandSegments[1])).Result;
 
                         if (succeed.Any())
                             Console.WriteLine("Killed: {0}", commandSegments[1]);
