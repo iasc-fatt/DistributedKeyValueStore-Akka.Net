@@ -76,6 +76,7 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RouteesCount.cs" />
     <Compile Include="HasRouteeByPath.cs" />
     <Compile Include="JoinerActor.cs" />
     <Compile Include="ActorRefJoinerActor.cs" />

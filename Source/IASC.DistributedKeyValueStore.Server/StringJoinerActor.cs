@@ -12,7 +12,7 @@ namespace IASC.DistributedKeyValueStore.Server
                 router: storage,
                 nrOfRoutees: 5, //TO DO: read from config
                 joiner: (a, b) => a.Concat(new[] { b }).ToList(),
-                initialValue: new string[0],
+                initialValue: new string[] { },
                 listener: listener)
         { }
     }

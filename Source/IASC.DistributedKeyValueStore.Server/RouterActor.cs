@@ -1,16 +1,11 @@
 ﻿using Akka.Actor;
 using Akka.Routing;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IASC.DistributedKeyValueStore.Server
 {
-    class RouterActor : ReceiveActor
+    internal class RouterActor : ReceiveActor
     {
         public IEnumerable<IActorRef> Routees;
         public ConsistentHash<IActorRef> Circle;
@@ -23,7 +18,7 @@ namespace IASC.DistributedKeyValueStore.Server
             Receive<ConsistentHashableEnvelope>((envelope) =>
             {
                 var msg = envelope.Message;
-                var routee = GetRoutee((string) envelope.HashKey);
+                var routee = GetRoutee((string)envelope.HashKey);
 
                 routee.Forward(msg);
             });
@@ -48,9 +43,13 @@ namespace IASC.DistributedKeyValueStore.Server
                     routee.Forward(msg);
             });
 
-            Receive<HasRouteeByPath>(msg => 
+            Receive<HasRouteeByPath>(msg =>
             {
+            });
 
+            Receive<RouteesCount>(msg =>
+            {
+                Sender.Tell(Routees.Count());
             });
         }
 
@@ -68,7 +67,6 @@ namespace IASC.DistributedKeyValueStore.Server
             {
                 PathDict.Add(r.Path.ToStringWithoutAddress(), r);
             });
-
         }
 
         private IActorRef GetRoutee(string hashKey)

@@ -42,6 +42,8 @@ namespace IASC.DistributedKeyValueStore.Server
                     return;
                 }
 
+                nrOfRoutees = router.Ask<int>(new RouteesCount()).Result;
+
                 router.Tell(new Broadcast(msg));
                 _processing = true;
 
