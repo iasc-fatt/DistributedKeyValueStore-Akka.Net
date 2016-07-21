@@ -15,4 +15,3 @@
 	* réplicas
 	* agregar nodos dinamicamente
 * pruebas de tolerancia a fallos
-* StorageActor supervisor strategy
