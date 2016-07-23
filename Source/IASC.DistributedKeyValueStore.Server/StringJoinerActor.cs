@@ -10,7 +10,6 @@ namespace IASC.DistributedKeyValueStore.Server
         public StringJoinerActor(IActorRef storage, IActorRef listener)
             : base(
                 router: storage,
-                nrOfRoutees: 5, //TO DO: read from config
                 joiner: (a, b) => a.Concat(new[] { b }).ToList(),
                 initialValue: new string[] { },
                 listener: listener)

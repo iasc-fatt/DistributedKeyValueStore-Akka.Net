@@ -17,6 +17,7 @@ namespace IASC.DistributedKeyValueStore.Server
         private bool _processing = false;
         private TContainer _joinedResponse;
         private int _nrOfReceivedResponses = 0;
+        private int nrOfRoutees;
 
         /// <param name="router">Router actor</param>
         /// <param name="nrOfRoutees">Number of routees</param>
@@ -25,7 +26,6 @@ namespace IASC.DistributedKeyValueStore.Server
         /// <param name="listener">Listener actor</param>
         public JoinerActor(
             IActorRef router,
-            int nrOfRoutees,
             Func<TContainer, TResponse, TContainer> joiner,
             TContainer initialValue,
             IActorRef listener)

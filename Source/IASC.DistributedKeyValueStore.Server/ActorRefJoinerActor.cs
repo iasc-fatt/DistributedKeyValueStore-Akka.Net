@@ -9,7 +9,6 @@ namespace IASC.DistributedKeyValueStore.Server
         public ActorRefJoinerActor(IActorRef storage, IActorRef listener)
             : base(
                 router: storage,
-                nrOfRoutees: 5, //TO DO: read from config
                 joiner: (a, b) =>
                 {
                     a.Add(b.Hash, b.Actor);
