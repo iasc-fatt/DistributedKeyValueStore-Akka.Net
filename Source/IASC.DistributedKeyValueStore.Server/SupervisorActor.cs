@@ -1,4 +1,5 @@
 ﻿using Akka.Actor;
+using Akka.Routing;
 using System;
 using System.Collections.Generic;
 
@@ -18,11 +19,13 @@ namespace IASC.DistributedKeyValueStore.Server
             }
 
             var routerProps = Props.Create(() => new RouterActor(storages))
-                .WithSupervisorStrategy(new AllForOneStrategy(-1, TimeSpan.FromSeconds(30), x => Directive.Restart));
+                .WithSupervisorStrategy(new OneForOneStrategy(-1, TimeSpan.FromSeconds(30), x => Directive.Restart));
 
             var router = Context.ActorOf(routerProps, "router");
 
-            var server = Context.ActorOf(Props.Create(() => new CoordinatorActor(router, maxKeyLength, maxValueLength)), "server");
+            var serverProps = Props.Create(() => new CoordinatorActor(router, maxKeyLength, maxValueLength))
+                .WithRouter(new SmallestMailboxPool(5));
+            var server = Context.ActorOf(serverProps, "server");
         }
     }
 }
