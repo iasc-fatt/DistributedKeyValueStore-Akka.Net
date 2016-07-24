@@ -83,24 +83,7 @@ namespace IASC.DistributedKeyValueStore.Server
                 Storage.Forward(new PathSelectorEnvelope(msg, msg.Path));
             });
         }
-
-        private IActorRef CreateStorages(int storagesCount, long maxStorageKeys)
-        {
-            var storageProps = Props.Create(() => new StorageActor(maxStorageKeys))
-                .WithSupervisorStrategy(new OneForOneStrategy(-1, TimeSpan.FromSeconds(30), x => Directive.Restart));
-
-            var storages = new List<IActorRef>();
-            for (int i = 1; i <= storagesCount; i++)
-            {
-                storages.Add(Context.ActorOf(storageProps, "s" + i));
-            }
-
-            var routerProps = Props.Create(() => new RouterActor(storages))
-                .WithSupervisorStrategy(new AllForOneStrategy(-1, TimeSpan.FromSeconds(30), x => Directive.Restart));
-
-            return Context.ActorOf(routerProps, "router");
-        }
-
+        
         private bool CheckMaxArgumentsLength(InsertValue msg, long maxKeyLength, long maxValueLength)
         {
             if (msg.Key.Length > maxKeyLength)
