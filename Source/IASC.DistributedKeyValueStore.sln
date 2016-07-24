@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IASC.DistributedKeyValueStore.Client", "IASC.DistributedKeyValueStore.Client\IASC.DistributedKeyValueStore.Client.csproj", "{F6280666-ED9B-4E11-8C4C-4044A637A298}"
 EndProject
@@ -14,6 +14,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6A863E20-C7BC-47C5-A495-B0DC824C71F6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IASC.DistributedKeyValueStore.Server.Tests", "Tests\IASC.DistributedKeyValueStore.Server.Tests\IASC.DistributedKeyValueStore.Server.Tests.csproj", "{405526EF-D535-4E2B-AA64-07F0A3D4B952}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EC8A2D36-59DB-481C-8FD2-6315C7CE342C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IASC.DistributedKeyValueStore.Storage", "IASC.DistributedKeyValueStore.Storage\IASC.DistributedKeyValueStore.Storage.csproj", "{A676C6A0-085B-49D0-BD5A-E2A344B8928E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +45,10 @@ Global
 		{405526EF-D535-4E2B-AA64-07F0A3D4B952}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{405526EF-D535-4E2B-AA64-07F0A3D4B952}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{405526EF-D535-4E2B-AA64-07F0A3D4B952}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A676C6A0-085B-49D0-BD5A-E2A344B8928E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A676C6A0-085B-49D0-BD5A-E2A344B8928E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A676C6A0-085B-49D0-BD5A-E2A344B8928E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A676C6A0-085B-49D0-BD5A-E2A344B8928E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

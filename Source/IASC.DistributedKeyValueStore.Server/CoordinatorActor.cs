@@ -15,6 +15,7 @@ namespace IASC.DistributedKeyValueStore.Server
 
         public CoordinatorActor(IActorRef storage, long maxKeyLength, long maxValueLength)
         {
+            _log.Info("Creating Coordinator");
             Storage = storage;
 
             Receive<InsertValue>(msg =>
