@@ -16,7 +16,7 @@ namespace IASC.DistributedKeyValueStore.Server
             KvActorSystem = ActorSystem.Create("KvActorSystem");
 
             Console.WriteLine("Creating SupervisorActor");
-            var supervisor = KvActorSystem.ActorOf(Props.Create(() => new SupervisorActor(storagesAmount, maxValueLength)), "supervisor");
+            var supervisor = KvActorSystem.ActorOf(Props.Create(() => new SupervisorActor(storagesAmount, maxValueLength)), "storages");
 
             Console.WriteLine("Ready");
             KvActorSystem.WhenTerminated.Wait();

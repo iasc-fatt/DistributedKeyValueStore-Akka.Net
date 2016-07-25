@@ -1,17 +1,19 @@
 ﻿using Akka.Actor;
 using Akka.Routing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace IASC.DistributedKeyValueStore.Server
 {
     internal class RouterActor : ReceiveActor
     {
-        public IEnumerable<IActorRef> Routees;
-        public ConsistentHash<IActorRef> Circle;
-        public Dictionary<string, IActorRef> PathDict;
+        public IEnumerable<string> Routees;
+        public ConsistentHash<string> Circle;
+        public Dictionary<string, ActorSelection> PathDict;
 
-        public RouterActor(IEnumerable<IActorRef> routees)
+        public RouterActor(IEnumerable<string> routees)
         {
             Routees = routees;
             ProcessRoutees();
@@ -19,23 +21,24 @@ namespace IASC.DistributedKeyValueStore.Server
             Receive<ConsistentHashableEnvelope>((envelope) =>
             {
                 var msg = envelope.Message;
-                var routee = GetRoutee((string)envelope.HashKey);
+                var path = GetRouteePath((string)envelope.HashKey);
 
-                routee.Forward(msg);
+                var routee = PathDict[path];
+                routee.Tell(msg, Sender);
             });
 
             Receive<Broadcast>((envelope) =>
             {
-                Routees.ToList().ForEach((r) =>
+                PathDict.ToList().ForEach((a) =>
                 {
-                    r.Forward(envelope.Message);
+                    a.Value.Tell(envelope.Message, Sender);
                 });
             });
 
             Receive<PathSelectorEnvelope>((envelope) =>
             {
                 if (PathDict.ContainsKey(envelope.Path))
-                    PathDict[envelope.Path].Forward(envelope.Message);
+                    PathDict[envelope.Path].Tell(envelope.Message, Sender);
             });
 
             Receive<HasRouteeByPath>(msg =>
@@ -45,24 +48,30 @@ namespace IASC.DistributedKeyValueStore.Server
 
             Receive<RouteesCount>(msg =>
             {
-                Sender.Tell(Routees.Count());
+                Sender.Tell(Routees.Count(), Sender);
             });
         }
 
         private void ProcessRoutees()
         {
-            Circle = ConsistentHash.Create<IActorRef>(Routees, 20);
-            PathDict = new Dictionary<string, IActorRef>();
-
-            Routees.ToList().ForEach((r) =>
+            Circle = ConsistentHash.Create<string>(Routees, 20);
+            PathDict = new Dictionary<string, ActorSelection>();
+            Routees.ToList().ForEach((path) =>
             {
-                PathDict.Add(r.Path.ToStringWithoutAddress(), r);
+                var actorSelector = Context.ActorSelection(path);
+                
+                PathDict.Add(path, actorSelector);
             });
         }
 
-        private IActorRef GetRoutee(string hashKey)
+        private string GetRouteePath(string hashKey)
         {
             return Circle.NodeFor(hashKey);
+        }
+
+        private bool HasActorFromPath(string path)
+        {
+            return PathDict.ContainsKey(path);
         }
     }
 }
