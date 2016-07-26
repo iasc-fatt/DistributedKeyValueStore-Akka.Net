@@ -20,43 +20,43 @@ namespace IASC.DistributedKeyValueStore.Client
         public async Task<Maybe<OpSucced>> Insert(string key, string value)
         {
             var msg = new InsertValue(key, value);
-            return await Server.Ask<Maybe<OpSucced>>(msg);
+            return await Server.Ask<Maybe<OpSucced>>(msg, TimeSpan.FromSeconds(20));
         }
 
         public async Task Remove(string key)
         {
             var msg = new RemoveValue(key);
-            await Server.Ask(msg);
+            await Server.Ask(msg, TimeSpan.FromSeconds(20));
         }
 
         public async Task<Maybe<LookupResult>> Lookup(string key)
         {
             var msg = new LookupValue(key);
-            return await Server.Ask<Maybe<LookupResult>>(msg);
+            return await Server.Ask<Maybe<LookupResult>>(msg, TimeSpan.FromSeconds(20));
         }
 
         public async Task<IEnumerable<string>> Search(string valueToCompare, string comparison)
         {
             var msg = new SearchValues(valueToCompare, comparison);
-            return await Server.Ask<IEnumerable<string>>(msg);
+            return await Server.Ask<IEnumerable<string>>(msg, TimeSpan.FromSeconds(20));
         }
 
         public async Task<IEnumerable<string>> Keys(string regex)
         {
             var msg = new SearchKeys(regex);
-            return await Server.Ask<IEnumerable<string>>(msg);
+            return await Server.Ask<IEnumerable<string>>(msg, TimeSpan.FromSeconds(20));
         }
 
         public async Task<IEnumerable<string>> HealthCheck()
         {
             var msg = new HealthCheck();
-            return await Server.Ask<IEnumerable<string>>(msg);
+            return await Server.Ask<IEnumerable<string>>(msg, TimeSpan.FromSeconds(20));
         }
 
         public async Task<Maybe<OpSucced>> KillActor(string path)
         {
             var msg = new KillActor(path);
-            return await Server.Ask<Maybe<OpSucced>>(msg);
+            return await Server.Ask<Maybe<OpSucced>>(msg, TimeSpan.FromSeconds(20));
         }
 
         public void Dispose()
