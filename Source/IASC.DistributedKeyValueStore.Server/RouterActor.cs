@@ -54,24 +54,26 @@ namespace IASC.DistributedKeyValueStore.Server
 
         private void ProcessRoutees()
         {
-            Circle = ConsistentHash.Create<string>(Routees, 20);
+            Circle = ConsistentHash.Create<string>(Routees.Select(p => PathWithoutAddress(p)), 20);
             PathDict = new Dictionary<string, ActorSelection>();
             Routees.ToList().ForEach((path) =>
             {
                 var actorSelector = Context.ActorSelection(path);
                 
-                PathDict.Add(path, actorSelector);
+                PathDict.Add(PathWithoutAddress(path), actorSelector);
+                Console.WriteLine(PathWithoutAddress(path));
             });
+        }
+
+        private string PathWithoutAddress(string fullPath)
+        {
+            var index = fullPath.IndexOf("/user/");
+            return fullPath.Substring(index);
         }
 
         private string GetRouteePath(string hashKey)
         {
             return Circle.NodeFor(hashKey);
-        }
-
-        private bool HasActorFromPath(string path)
-        {
-            return PathDict.ContainsKey(path);
         }
     }
 }
