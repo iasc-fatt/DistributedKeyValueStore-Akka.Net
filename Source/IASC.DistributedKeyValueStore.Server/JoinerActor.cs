@@ -32,6 +32,8 @@ namespace IASC.DistributedKeyValueStore.Server
         {
             this._joinedResponse = initialValue;
 
+            SetReceiveTimeout(TimeSpan.FromSeconds(5));
+
             Receive<TMessage>(msg =>
             {
                 _log.Info("Received message '{0}'", msg);
@@ -46,8 +48,6 @@ namespace IASC.DistributedKeyValueStore.Server
 
                 router.Tell(new Broadcast(msg));
                 _processing = true;
-
-                // TO DO: handle timeout
             });
 
             Receive<TResponse>(msg =>
@@ -62,6 +62,15 @@ namespace IASC.DistributedKeyValueStore.Server
                     listener.Tell(_joinedResponse);
                     Self.Tell(PoisonPill.Instance);
                 }
+            });
+
+            Receive<ReceiveTimeout>(msg =>
+            {
+                _nrOfReceivedResponses++;
+                _log.Info("Waiting timeout, only recieved {0} responses of {1}", _nrOfReceivedResponses - 1, nrOfRoutees);
+
+                listener.Tell(_joinedResponse);
+                Self.Tell(PoisonPill.Instance);
             });
         }
     }

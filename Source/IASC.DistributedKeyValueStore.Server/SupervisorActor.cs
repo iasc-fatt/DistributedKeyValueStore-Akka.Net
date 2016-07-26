@@ -14,7 +14,7 @@ namespace IASC.DistributedKeyValueStore.Server
 
             for (int i = 1; i <= storagesAmount; i++)
             {
-                storagesPaths.Add(storageAddress + "/user/storages/s" + i);
+                storagesPaths.Add(storageAddress + ":805" + i + "/user/storages/s" + i);
             }
 
             var routerProps = Props.Create(() => new RouterActor(storagesPaths))

@@ -7,16 +7,12 @@ namespace IASC.DistributedKeyValueStore.Server
 {
     public class SupervisorActor : ReceiveActor
     {
-        public SupervisorActor(long storagesAmount, long maxStorageKeys)
+        public SupervisorActor(long maxStorageKeys, string storageNumber)
         {
             var storageProps = Props.Create(() => new StorageActor(maxStorageKeys))
                 .WithSupervisorStrategy(new OneForOneStrategy(-1, TimeSpan.FromSeconds(30), x => Directive.Restart));
 
-            var storages = new List<IActorRef>();
-            for (int i = 1; i <= storagesAmount; i++)
-            {
-                storages.Add(Context.ActorOf(storageProps, "s" + i));
-            }
+            Context.ActorOf(storageProps, "s" + storageNumber);
         }
     }
 }
